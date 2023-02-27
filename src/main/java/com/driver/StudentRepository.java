@@ -25,14 +25,16 @@ public class StudentRepository {
     }
 
     public void saveStudentTeacherPair(String student, String teacher){
-    if(studentMap.containsKey(student) && teacherMap.containsKey(teacher)){
-        studentMap.put(student,studentMap.get(student));
-        teacherMap.put(teacher,teacherMap.get(teacher));
         List<String> currentStudent = new ArrayList<>();
-        if(studentTeacherMap.containsKey(teacher)) currentStudent = studentTeacherMap.get(teacher);
-        currentStudent.add(student);
-        studentTeacherMap.put(student, currentStudent);
-    }
+        if(studentTeacherMap.containsKey(teacher)) {
+            currentStudent = studentTeacherMap.get(teacher);
+            currentStudent.add(student);
+            studentTeacherMap.put(student, currentStudent);
+        }
+        else{
+            currentStudent.add(student);
+            studentTeacherMap.put(teacher,currentStudent);
+        }
     }
 
     public Student getStudent(String student){
@@ -54,21 +56,20 @@ public class StudentRepository {
     }
 
     public void deleteTeacher(String teacher){
-    List<String> students = new ArrayList<>();
-    if(studentTeacherMap.containsKey(teacher)) {
-        students = studentTeacherMap.get(teacher);
+        List<String> students = new ArrayList<>();
+        if(studentTeacherMap.containsKey(teacher)) {
+            students = studentTeacherMap.get(teacher);
 
-        for (String student : students) {
-            if (studentMap.containsKey(student)) {
-                studentMap.remove(student);
+            for (String student : students) {
+                if (studentMap.containsKey(student)) {
+                    studentMap.remove(student);
+                }
             }
+            if(teacherMap.containsKey(teacher)){
+                teacherMap.remove(teacher);
+            }
+            studentTeacherMap.remove(teacher);
         }
-        studentTeacherMap.remove(teacher);
-    }
-        if(teacherMap.containsKey(teacher)){
-            teacherMap.remove(teacher);
-        }
-
     }
 
     public void deleteAllTeachers(){
